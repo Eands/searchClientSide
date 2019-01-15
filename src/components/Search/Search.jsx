@@ -18,7 +18,7 @@ class Search extends React.Component {
     }
 
     return (
-      <from onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>
         {children}
         <input
           type='text'
@@ -28,7 +28,7 @@ class Search extends React.Component {
         <button type='submit'>
           {children}
         </button>
-      </from>
+      </form>
     )
   }
 }

@@ -7,24 +7,28 @@ class App extends Component {
     super(props);
 
     this.state = {
-      searchTerm: '',
+      searchTerm: '123',
     }
   }
 
-  onSubmit() {
+  onSearchSubmit(event) {
+    event.preventDefault();
     console.log('submit');
   }
 
-  onChange() {
+  onSearchChange() {
     console.log('change');
-    console.log(this.searchTerm);
   }
 
   render() {
+    const {
+      searchTerm
+    } = this.state
+
     return (
       <div className="App">
         <Search
-            value={this.searchTerm}
+            value={searchTerm}
             onChange={this.onSearchChange}
             onSubmit={this.onSearchSubmit}
         >
