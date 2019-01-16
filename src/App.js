@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Search from './components/Search/Search';
+import Result from './components/Result/Result';
 import './App.css';
 
 class App extends Component {
@@ -25,15 +26,27 @@ class App extends Component {
       searchTerm
     } = this.state
 
+    const results = [{
+      title: 'title',
+      url: 'url'
+    },{
+      title: 'title',
+      url: 'url'
+    },{
+      title: 'title',
+      url: 'url'
+    }]
+
     return (
       <div className="App">
         <Search
-            value={searchTerm}
-            onChange={this.onSearchChange}
-            onSubmit={this.onSearchSubmit}
+            value = {searchTerm}
+            onChange = {this.onSearchChange}
+            onSubmit = {this.onSearchSubmit}
         >
             Search
         </Search>
+        <Result results = {results}/>
       </div>
     );
   }
