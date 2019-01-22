@@ -4,6 +4,7 @@ const ResultItem = ({value}) => {
   return (
     <div>
       <h4>{value.title}</h4>
+      <p>{value.description}</p>
       <span>{value.url}</span>
     </div>
   );
