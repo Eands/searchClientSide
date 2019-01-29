@@ -3,9 +3,10 @@ import React from 'react';
 const ResultItem = ({value}) => {
   return (
     <div>
-      <h4>{value.title}</h4>
+      <h4>
+        <a href={value.url}>{value.title}</a>
+      </h4>
       <p>{value.description}</p>
-      <span>{value.url}</span>
     </div>
   );
 }
@@ -14,7 +15,7 @@ const ResultList = ({items}) => {
   return(
     <div>
       {items.map((value, index) =>
-        <ResultItem key = {index} value = {value}/>
+        <ResultItem key={index} value={value}/>
       )}
     </div>
   )
@@ -28,7 +29,7 @@ class Result extends React.Component {
     } = this.props;
 
     return(
-      <ResultList items = {results}/>
+      <ResultList items={results}/>
     )
   }
 }
