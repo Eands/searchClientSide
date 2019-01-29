@@ -24,32 +24,36 @@ class App extends Component {
   filterArticles(desiredValue) {
     let result = articleData;
 
-    if (this.state.searchTerm.search(/[a-zA-Z]/) >= 0) {
-      result = result.filter(item =>
-        item.title.toLowerCase().search(porterEu.stemmer(desiredValue)) >= 0 ||
-        item.description.toLowerCase().search(porterEu.stemmer(desiredValue)) >= 0
-      )
-      console.log(porterEu.stemmer(desiredValue));
-      if (result.length == 0) {
-        result = [{
-          description: 'Not found',
-        }]
+    desiredValue.split(/\s+/).map(word => {
+      if (this.state.searchTerm.search(/[a-zA-Z]/) >= 0) {
+        result = result.filter(item =>
+          item.title.toLowerCase().search(porterEu.stemmer(word)) >= 0 ||
+          item.description.toLowerCase().search(porterEu.stemmer(word)) >= 0
+        )
+        console.log(porterEu.stemmer(word));
+        if (result.length === 0) {
+          result = [{
+            description: 'Not found',
+          }]
+        }
+      } else if (this.state.searchTerm.search(/[а-яА-Я]/) >= 0) {
+        result = result.filter(item =>
+          item.title.toLowerCase().search(porterRu.stem(word)) !== -1 ||
+          item.description.toLowerCase().search(porterRu.stem(word)) !== -1
+        )
+        console.log(porterRu.stem(word));
+        if (result.length === 0) {
+          result = [{
+            description: 'По вашему запросу ничего не найденно',
+          }]
+        }
+      } else {
+        console.log('else');
       }
-    } else {
-      result = result.filter(item =>
-        item.title.toLowerCase().search(porterRu.stem(desiredValue)) != -1 ||
-        item.description.toLowerCase().search(porterRu.stem(desiredValue)) != -1
-      )
-      console.log(porterRu.stem(desiredValue));
-      if (result.length == 0) {
-        result = [{
-          description: 'По вашему запросу ничего не найденно',
-        }]
-      }
-    }
-    
-    this.setState({
-      results: result,
+
+      this.setState({
+        results: result,
+      })
     })
   }
 
