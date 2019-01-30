@@ -30,7 +30,6 @@ class App extends Component {
           item.title.toLowerCase().search(porterEu.stemmer(word)) >= 0 ||
           item.description.toLowerCase().search(porterEu.stemmer(word)) >= 0
         )
-        console.log(porterEu.stemmer(word));
         if (result.length === 0) {
           result = [{
             description: 'Not found',
@@ -41,7 +40,6 @@ class App extends Component {
           item.title.toLowerCase().search(porterRu.stem(word)) !== -1 ||
           item.description.toLowerCase().search(porterRu.stem(word)) !== -1
         )
-        console.log(porterRu.stem(word));
         if (result.length === 0) {
           result = [{
             description: 'По вашему запросу ничего не найденно',

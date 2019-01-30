@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from "prop-types";
 
 class Search extends React.Component {
@@ -29,18 +28,20 @@ class Search extends React.Component {
     }
 
     return (
-      <form onSubmit={onSubmit}>
-        {children}
-        <input
-          type='text'
-          value={value}
-          onChange={onChange}
-          ref={this.searchInput}
-        />
-        <button type='submit'>
+      <div>
+        <form onSubmit={onSubmit}>
           {children}
-        </button>
-      </form>
+          <input
+            type='text'
+            value={value}
+            onChange={onChange}
+            ref={this.searchInput}
+          />
+          <button type='submit'>
+            {children}
+          </button>
+        </form>
+      </div>
     )
   }
 }
