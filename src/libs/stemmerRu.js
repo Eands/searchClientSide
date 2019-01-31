@@ -21,6 +21,7 @@ class Porter {
     word = word.toLowerCase();
     word = word.replace('ё', 'е');
     let m = RVRE.exec(word);
+    if (m != null) {
     if (m.length) {
       let pre = m[1];
       let rv = m[2];
@@ -58,6 +59,7 @@ class Porter {
       }
       word = pre + rv;
     }
+  }
     return word;
   }
 }
