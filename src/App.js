@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Search from './components/Search/Search';
 import Result from './components/Result/Result';
-import { articles as articleData } from './data/data';
+import {articles as articleData} from './data/data';
+import Fuse from 'fuse.js';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
 import './App.css';
@@ -14,6 +15,16 @@ class App extends Component {
       showHits: false,
       results: [],
       searchTerm: '',
+      searchOptions: {
+        threshold: 0.8,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 3,
+        keys: [
+          'title',
+          'description'
+        ]
+      }
     };
 
     this.onSearchChange = this.onSearchChange.bind(this);
@@ -22,8 +33,8 @@ class App extends Component {
   }
 
   filterArticles() {
-    let result = articleData;
     const matchString = this.state.searchTerm;
+    const fuse = new Fuse(articleData, this.state.searchOptions);
     let tmpString = [];
 
     matchString.split(/\s+/).map(word => {
@@ -35,16 +46,13 @@ class App extends Component {
         tmpString.push(word);
       }
     });
-
-    let regString = new RegExp(tmpString.join('[^]*'), 'g');
-    //let trimmedMathString = tmpString.join(' ');
-    console.log(regString);
-
-    result = result.filter(item =>
+    let trimmedMathString = tmpString.join(' ');
+    //let regString = new RegExp(tmpString.join('[^]*'), 'g');
+    let result = fuse.search(trimmedMathString);
+    /*result = result.filter(item =>
       item.title.toLowerCase().search(regString) >= 0 ||
       item.description.toLowerCase().search(regString) >= 0
-    )
-
+    );*/
     if (result.length === 0) {
       result = [{
         description: 'Nothing found',
@@ -78,7 +86,7 @@ class App extends Component {
     const {
       searchTerm,
       results
-    } = this.state
+    } = this.state;
 
     return (
       <div className="App">
@@ -89,7 +97,7 @@ class App extends Component {
         >
           Search
         </Search>
-        <Result results={results} />
+        <Result results={results}/>
       </div>
     );
   }
