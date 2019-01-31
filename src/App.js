@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Search from './components/Search/Search';
 import Result from './components/Result/Result';
-import {articles as articleData} from './data/data';
+import { articles as articleData } from './data/data';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
 import './App.css';
@@ -11,7 +11,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      isLoading: false,
+      showHits: false,
       results: [],
       searchTerm: '',
     };
@@ -21,48 +21,54 @@ class App extends Component {
     this.filterArticles = this.filterArticles.bind(this);
   }
 
-  filterArticles(desiredValue) {
+  filterArticles() {
     let result = articleData;
+    const matchString = this.state.searchTerm;
+    let tmpString = [];
 
-    desiredValue.split(/\s+/).map(word => {
-      if (this.state.searchTerm.search(/[a-zA-Z]/) >= 0) {
-        result = result.filter(item =>
-          item.title.toLowerCase().search(porterEu.stemmer(word)) >= 0 ||
-          item.description.toLowerCase().search(porterEu.stemmer(word)) >= 0
-        )
-        if (result.length === 0) {
-          result = [{
-            description: 'Not found',
-          }]
-        }
-      } else if (this.state.searchTerm.search(/[а-яА-Я]/) >= 0) {
-        result = result.filter(item =>
-          item.title.toLowerCase().search(porterRu.stem(word)) !== -1 ||
-          item.description.toLowerCase().search(porterRu.stem(word)) !== -1
-        )
-        if (result.length === 0) {
-          result = [{
-            description: 'По вашему запросу ничего не найденно',
-          }]
-        }
+    matchString.split(/\s+/).map(word => {
+      if (word.search(/[a-zA-Z]/) >= 0) {
+        tmpString.push(porterEu.stemmer(word));
+      } else if (word.search(/[а-яА-Я]/) >= 0) {
+        tmpString.push(porterRu.stem(word));
       } else {
-        console.log('else');
+        tmpString.push(word);
       }
+    });
 
-      this.setState({
-        results: result,
-      })
+    let regString = new RegExp(tmpString.join('[^]*'), 'g');
+    //let trimmedMathString = tmpString.join(' ');
+    console.log(regString);
+
+    result = result.filter(item =>
+      item.title.toLowerCase().search(regString) >= 0 ||
+      item.description.toLowerCase().search(regString) >= 0
+    )
+
+    if (result.length === 0) {
+      result = [{
+        description: 'Nothing found',
+      }]
+    }
+
+    this.setState({
+      results: result,
     })
   }
 
   onSearchSubmit(event) {
     event.preventDefault();
     if (this.state.searchTerm.length >= 3) {
-      this.filterArticles(this.state.searchTerm);
+      this.filterArticles();
     }
   }
 
   onSearchChange(event) {
+    if (event.target.value.length === 0) {
+      this.setState({
+        results: []
+      })
+    }
     this.setState({
       searchTerm: event.target.value,
     })
@@ -77,13 +83,13 @@ class App extends Component {
     return (
       <div className="App">
         <Search
-            value={searchTerm}
-            onChange={this.onSearchChange}
-            onSubmit={this.onSearchSubmit}
+          value={searchTerm}
+          onChange={this.onSearchChange}
+          onSubmit={this.onSearchSubmit}
         >
-            Search
+          Search
         </Search>
-        <Result results={results}/>
+        <Result results={results} />
       </div>
     );
   }
