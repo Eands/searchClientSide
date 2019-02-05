@@ -1,23 +1,23 @@
 import React from 'react';
 
-const ResultItem = ({value}) => {
+const ResultItem = ({ value }) => {
   return (
-    <div>
+    <li>
       <h4>
-        <a href={value.url}>{value.title}</a>
+        <a href={value.item.url}>{value.item.title}</a>
       </h4>
-      <p>{value.description}</p>
-    </div>
+      <p>{value.item.description}</p>
+    </li>
   );
 }
 
-const ResultList = ({items}) => {
-  return(
-    <div>
+const ResultList = ({ items }) => {
+  return (
+    <ul>
       {items.map((value, index) =>
-        <ResultItem key={index} value={value}/>
+        <ResultItem key={index} value={value} />
       )}
-    </div>
+    </ul>
   )
 }
 
@@ -28,8 +28,8 @@ class Result extends React.Component {
       results,
     } = this.props;
 
-    return(
-      <ResultList items={results}/>
+    return (
+      <ResultList items={results} />
     )
   }
 }

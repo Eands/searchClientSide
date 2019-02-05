@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Search from './components/Search/Search';
 import Result from './components/Result/Result';
-import {articles as articleData} from './data/data';
+import { articles as articleData } from './data/data';
 import Fuse from 'fuse.js';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
@@ -16,8 +16,11 @@ class App extends Component {
       results: [],
       searchTerm: '',
       searchOptions: {
-        threshold: 0.8,
-        distance: 100,
+        findAllMatches: true,
+        includeMatches: true,
+        shouldSort: true,
+        threshold: 0.6,
+        distance: 9000,
         maxPatternLength: 32,
         minMatchCharLength: 3,
         keys: [
@@ -30,42 +33,71 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.filterArticles = this.filterArticles.bind(this);
+    this.highlitResults = this.highlitResults.bind(this);
+  }
+
+  lastWord(words) {
+    var n = words.split(" ");
+    return n[n.length - 1];
   }
 
   filterArticles() {
-    const matchString = this.state.searchTerm;
-    const fuse = new Fuse(articleData, this.state.searchOptions);
-    let tmpString = [];
+    let highlitResults = [];
 
-    matchString.split(/\s+/).map(word => {
-      if (word.search(/[a-zA-Z]/) >= 0) {
-        tmpString.push(porterEu.stemmer(word));
-      } else if (word.search(/[а-яА-Я]/) >= 0) {
-        tmpString.push(porterRu.stem(word));
-      } else {
-        tmpString.push(word);
-      }
-    });
-    let trimmedMathString = tmpString.join(' ');
-    //let regString = new RegExp(tmpString.join('[^]*'), 'g');
-    let result = fuse.search(trimmedMathString);
-    /*result = result.filter(item =>
-      item.title.toLowerCase().search(regString) >= 0 ||
-      item.description.toLowerCase().search(regString) >= 0
-    );*/
+    let time = performance.now();
+    let trimmedSearchWords = this.state.searchTerm;
+    const fuse = new Fuse(articleData, this.state.searchOptions);
+    if (this.lastWord(this.state.searchTerm).search(/[a-zA-Z]/) >= 0) {
+      trimmedSearchWords = trimmedSearchWords.substring(0, trimmedSearchWords.indexOf(' ')) + ' ' + porterEu.stemmer(this.lastWord(this.state.searchTerm));
+    } else if (this.lastWord(this.state.searchTerm).search(/[а-яА-Я]/) >= 0) {
+      trimmedSearchWords = trimmedSearchWords.substring(0, trimmedSearchWords.indexOf(' ')) + ' ' + porterRu.stem(this.lastWord(this.state.searchTerm));
+    }
+    let result = fuse.search(trimmedSearchWords);
+
     if (result.length === 0) {
-      result = [{
+      result.item = [{
         description: 'Nothing found',
       }]
+      this.setState({
+        results: result,
+      })
+    } else {
+      result.map(item =>
+        highlitResults.push(this.highlitResults(item))
+      )
+      this.setState({
+        results: highlitResults,
+      })
     }
+    //time
+    time = performance.now() - time;
+    console.log('Время выполнения = ', time);
+  }
 
-    this.setState({
-      results: result,
-    })
+  highlitResults(resultItem) {
+    resultItem.matches.forEach((matchItem) => {
+      let text = resultItem.item[matchItem.key];
+      let matches = [].concat(matchItem.indices);
+      let result = [];
+      let pair = matches.shift()
+      result[0] = text.substring(0, pair[0]);
+      result[1] = <b>{text.substring(pair[0], pair[1])}</b>
+      result[2] = text.substring(pair[1], text.length);
+      resultItem.item[matchItem.key] = result;
+      if (resultItem.children && resultItem.children.length > 0) {
+        resultItem.children.forEach((child) => {
+          this.highlitResults(child);
+        });
+      }
+    });
+    return resultItem;
   }
 
   onSearchSubmit(event) {
     event.preventDefault();
+    this.setState({
+      results: []
+    })
     if (this.state.searchTerm.length >= 3) {
       this.filterArticles();
     }
@@ -97,7 +129,7 @@ class App extends Component {
         >
           Search
         </Search>
-        <Result results={results}/>
+        <Result results={results} />
       </div>
     );
   }

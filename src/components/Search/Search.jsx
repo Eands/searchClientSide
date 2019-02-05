@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from "prop-types";
 
 class Search extends React.Component {
   constructor(props) {
@@ -19,13 +18,6 @@ class Search extends React.Component {
       onChange,
       children,
     } = this.props;
-
-    Search.propTypes = {
-      value: PropTypes.string,
-      onSubmit: PropTypes.func,
-      onChange: PropTypes.func,
-      children: PropTypes.node,
-    }
 
     return (
       <div>
