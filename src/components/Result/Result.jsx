@@ -2,7 +2,7 @@ import React from 'react';
 
 const ResultItem = ({value}) => {
   return (
-    <li>
+    <li key={value.index}>
       <h4>
         <a href={value.url}>{value.title}</a>
       </h4>

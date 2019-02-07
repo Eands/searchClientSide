@@ -55,7 +55,7 @@ class App extends Component {
         location: 0,
         includeMatches: true,
         shouldSort: true,
-        threshold: 0.6,
+        threshold: 0.4,
         distance: 10000,
         maxPatternLength: 32,
         minMatchCharLength: 3,
@@ -69,7 +69,6 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.filterArticles = this.filterArticles.bind(this);
-    this.highlightResults = this.highlightResults.bind(this);
   }
 
   lastWord(words) {
@@ -99,15 +98,18 @@ class App extends Component {
   filterArticles() {
     //time
     let time = performance.now();
-    //let highlightResults = [];
     let result;
 
     const fuse = new Fuse(articleData, this.state.searchOptions);
-    result = fuse.search(this.state.searchTerm);
+    result = fuse.search(this.stemWord(this.state.searchTerm));
     if (result.length === 0) {
-      //todo: do something
+      result = [{
+        description: 'Nothing found'
+      }];
+      this.setState({
+        results: result,
+      })
     } else {
-      console.log(highlight(result, 'className'));
       this.setState({
         results: highlight(result, 'className'),
       })
@@ -115,39 +117,6 @@ class App extends Component {
     //time
     time = performance.now() - time;
     console.log('Время выполнения = ', time);
-  }
-
-  highlightResults(resultItem) {
-    resultItem.matches.map((matchItem) => {
-      let text = resultItem.item[matchItem.key];
-      let matches = [].concat(matchItem.indices);
-      let result = [];
-
-      /*let count = 0; not work
-      matches.map((match, index) => {
-        result[count++] = text.substring(0, match[0])
-        result[count++] = <b>{text.substring(match[0], match[1])}</b>
-        result[count++] = text.substring(match[1], text.length);
-        text = text.substring(match[1], text.length);
-      })*/
-
-      if (matches[0][0] === 0) {
-        text = text.substring(0, matches[0][1] + 300) + '...';
-      } else {
-        text = text.substring(matches[0][0] - 150, matches[0][1] + 150) + '...';
-      }
-
-      result[0] = text.substring(0, matches[0][0]);
-      result[1] = <b>{text.substring(matches[0][0], matches[0][1])}</b>;
-      result[2] = text.substring(matches[0][1], text.length);
-      resultItem.item[matchItem.key] = result;
-      if (resultItem.children && resultItem.children.length > 0) {
-        resultItem.children.map((child) => {
-          this.highlightResults(child);
-        });
-      }
-    });
-    return resultItem;
   }
 
   onSearchSubmit(event) {
