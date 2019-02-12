@@ -55,7 +55,7 @@ class App extends Component {
         location: 0,
         includeMatches: true,
         shouldSort: true,
-        threshold: 0.4,
+        threshold: 0.2,
         distance: 10000,
         maxPatternLength: 32,
         minMatchCharLength: 3,
@@ -153,7 +153,7 @@ class App extends Component {
           onChange={this.onSearchChange}
           onSubmit={this.onSearchSubmit}
         >
-          Search
+          Поиск
         </Search>
         <Result results={results}/>
       </div>
