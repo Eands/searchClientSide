@@ -1,47 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Search from './components/Search/Search';
 import Result from './components/Result/Result';
-import {articles as articleData} from './data/data';
+import { articles as articleData } from './data/data';
 import Fuse from 'fuse.js';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
 import './App.css';
-
-const highlight = (resultSearch, className) => {
-  const set = (obj, path, value) => {
-    const pathValue = path.split('.');
-    let i;
-    for (i = 0; i < pathValue.length - 1; i++) {
-      obj = obj[pathValue[i]];
-    }
-    obj[pathValue[i]] = value;
-  };
-  const generateHighlightedText = (inputText, regions) => {
-    let content = [];
-    let startIndex = 0;
-    regions.forEach(region => {
-      const lastIndex = region[1] + 1;
-      content.push(
-        inputText.substring(startIndex, region[0]),
-        <b className={className}>
-          {inputText.substring(region[0], lastIndex)}
-        </b>
-      );
-      startIndex = lastIndex;
-    });
-    content.push(inputText.substring(startIndex));
-    return content;
-  };
-  return resultSearch
-    .filter(({matches}) => matches && matches.length)
-    .map(({item, matches}) => {
-      const highlightedItem = {...item};
-      matches.forEach((match) => {
-        set(highlightedItem, match.key, generateHighlightedText(match.value, match.indices));
-      });
-      return highlightedItem;
-    });
-};
 
 class App extends Component {
   constructor(props) {
@@ -69,7 +33,48 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.filterArticles = this.filterArticles.bind(this);
+    this.highlight = this.highlight.bind(this);
   }
+
+  highlight(resultSearch, className) {
+    const set = (obj, path, value) => {
+      const pathValue = path.split('.');
+      let i;
+      for (i = 0; i < pathValue.length - 1; i++) {
+        obj = obj[pathValue[i]];
+      }
+      obj[pathValue[i]] = value;
+    };
+    const generateHighlightedText = (inputText, regions) => {
+      let content = [];
+      let startIndex = 0;
+      regions.forEach(region => {
+        const differenceRegion = region[1] - region[0];
+        const searchTermLength = this.stemWord(this.state.searchTerm).length - 1;
+        if (searchTermLength <= differenceRegion) {
+          const lastIndex = region[1] + 1;
+          content.push(
+            inputText.substring(startIndex, region[0]),
+            <b className={className}>
+              {inputText.substring(region[0], lastIndex)}
+            </b>
+          );
+          startIndex = lastIndex;
+        }
+      });
+      content.push(inputText.substring(startIndex));
+      return content;
+    };
+    return resultSearch
+      .filter(({ matches }) => matches && matches.length)
+      .map(({ item, matches }) => {
+        const highlightedItem = { ...item };
+        matches.forEach((match) => {
+          set(highlightedItem, match.key, generateHighlightedText(match.value, match.indices));
+        });
+        return highlightedItem;
+      });
+  };
 
   lastWord(words) {
     let n = words.split(" ");
@@ -111,7 +116,7 @@ class App extends Component {
       })
     } else {
       this.setState({
-        results: highlight(result, 'className'),
+        results: this.highlight(result, 'className'),
       })
     }
     //time
@@ -155,7 +160,7 @@ class App extends Component {
         >
           Поиск
         </Search>
-        <Result results={results}/>
+        <Result results={results} />
       </div>
     );
   }
