@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Search from './components/Search/Search';
 import Result from './components/Result/Result';
-import { articles as articleData } from './data/data';
+import {articles as articleData} from './data/data';
 import Fuse from 'fuse.js';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
@@ -13,6 +13,7 @@ class App extends Component {
 
     this.state = {
       showHits: false,
+      articles: articleData,
       results: [],
       searchTerm: '',
       searchOptions: {
@@ -20,7 +21,7 @@ class App extends Component {
         includeMatches: true,
         shouldSort: true,
         threshold: 0.2,
-        distance: 10000,
+        distance: 40000,
         maxPatternLength: 32,
         minMatchCharLength: 3,
         keys: [
@@ -34,6 +35,7 @@ class App extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.filterArticles = this.filterArticles.bind(this);
     this.highlight = this.highlight.bind(this);
+    this.trimArticles = this.trimArticles.bind(this);
   }
 
   highlight(resultSearch, className) {
@@ -66,9 +68,9 @@ class App extends Component {
       return content;
     };
     return resultSearch
-      .filter(({ matches }) => matches && matches.length)
-      .map(({ item, matches }) => {
-        const highlightedItem = { ...item };
+      .filter(({matches}) => matches && matches.length)
+      .map(({item, matches}) => {
+        const highlightedItem = {...item};
         matches.forEach((match) => {
           set(highlightedItem, match.key, generateHighlightedText(match.value, match.indices));
         });
@@ -101,27 +103,32 @@ class App extends Component {
   }
 
   filterArticles() {
-    //time
-    let time = performance.now();
     let result;
-
-    const fuse = new Fuse(articleData, this.state.searchOptions);
+    const fuse = new Fuse(this.state.articles, this.state.searchOptions);
     result = fuse.search(this.stemWord(this.state.searchTerm));
     if (result.length === 0) {
-      result = [{
-        description: 'Nothing found'
-      }];
       this.setState({
-        results: result,
-      })
+        results: [{
+          description: 'Nothing found'
+        }]
+      });
     } else {
       this.setState({
-        results: this.highlight(result, 'className'),
+        results: this.trimArticles(this.highlight(result, 'className')),
       })
     }
-    //time
-    time = performance.now() - time;
-    console.log('Время выполнения = ', time);
+  }
+
+  trimArticles(articles) {
+    articles.map(article => {
+      if (article.description[0].length >= 150) {
+        article.description[0] = '...' + article.description[0].slice(-150);
+      }
+      if (article.description[2].length >= 150) {
+        article.description[2] = article.description[2].substring(0, 150) + '...';
+      }
+    });
+    return articles;
   }
 
   onSearchSubmit(event) {
@@ -160,7 +167,7 @@ class App extends Component {
         >
           Поиск
         </Search>
-        <Result results={results} />
+        {results.length !== 0 ? <Result results={results}/> : null}
       </div>
     );
   }

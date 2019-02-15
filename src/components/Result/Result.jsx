@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactPaginate from 'react-paginate';
 
 const ResultItem = ({value}) => {
   return (
@@ -22,14 +23,60 @@ const ResultList = ({items}) => {
 };
 
 class Result extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = ({
+      pageRangeDisplayed: 3,
+      marginPagesDisplayed: 3,
+      trimResult: [],
+    });
+
+    this.handlePageClick = this.handlePageClick.bind(this);
+    this.getItems = this.getItems.bind(this);
+  }
+
+  getPageCount() {
+    return Math.ceil(this.props.results.length / this.state.pageRangeDisplayed);
+  }
+
+  getItems(selected) {
+    let offset = Math.ceil(selected * this.state.pageRangeDisplayed);
+    return this.props.results.slice(offset, this.state.pageRangeDisplayed + offset);
+  }
+
+  handlePageClick(data) {
+    this.setState({
+      trimResult: this.getItems(data.selected),
+    })
+  }
+
+  componentDidMount() {
+    this.setState({
+      trimResult: this.getItems(0),
+    })
+  }
 
   render() {
     const {
-      results,
-    } = this.props;
+      pageRangeDisplayed,
+      marginPagesDisplayed,
+      trimResult
+    } = this.state;
+
+    const pageCount = this.getPageCount();
+    console.log(pageCount);
 
     return (
-      <ResultList items={results}/>
+      <div>
+        <ResultList items={trimResult}/>
+        <ReactPaginate
+          pageCount={pageCount}
+          pageRangeDisplayed={pageRangeDisplayed}
+          marginPagesDisplayed={marginPagesDisplayed}
+          onPageChange={this.handlePageClick}
+        />
+      </div>
     )
   }
 }
