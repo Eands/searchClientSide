@@ -64,9 +64,7 @@ class Result extends React.Component {
       marginPagesDisplayed,
       trimResult
     } = this.state;
-
     const pageCount = this.getPageCount();
-    console.log(pageCount);
 
     return (
       <div>
