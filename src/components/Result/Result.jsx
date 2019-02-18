@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
+import './Result.css';
 
 const ResultItem = ({value}) => {
   return (
@@ -75,6 +76,10 @@ class Result extends React.Component {
           pageRangeDisplayed={pageRangeDisplayed}
           marginPagesDisplayed={marginPagesDisplayed}
           onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          activeClassName={'active'}
+          subContainerClassName={'pages pagination'}
+          breakClassName={'break-me'}
         />
       </div>
     )

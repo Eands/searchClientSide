@@ -1,0 +1,40 @@
+.pagination {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.pagination li {
+    display: flex;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+.pagination li a {
+    border-radius: 7px;
+    padding: 15px;
+}
+
+.pagination li :hover {
+    transition: background-color .3s;
+    background-color: #c1c1c1;
+}
+
+.pagination .active {
+    cursor: default;
+    background-color: chocolate;
+}
+
+.pagination .previous {
+    background-color: chocolate;
+}
+
+.pagination .previous.disabled {
+    cursor: default;
+}
+
+.pagination .next {
+    background-color: chocolate;
+}
+.pagination .next.disabled {
+    cursor: default;
+}
