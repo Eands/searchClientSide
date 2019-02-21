@@ -121,16 +121,18 @@ class App extends Component {
 
   trimArticles(articles) {
     articles.map(article => {
+      if (typeof article.description === 'string') {
+        article.description = article.description.substring(0, 300) + '...';
+      }
       if (article.description[0] !== undefined && article.description[0].length >= 150) {
-        let tmp;
-        tmp = '...' + article.description[0].slice(-350);
-        if (article.description[2] === undefined) {
-          tmp = article.description[0].substring(0, 300) + '...';
-        }
-        article.description[0] = tmp;
+        article.description[0] = '...' + article.description[0].slice(-150);
       }
       if (article.description[2] !== undefined && article.description[2].length >= 150) {
-        article.description[2] = article.description[2].substring(0, 150) + '...';
+        if (article.description[0].length <= 100) {
+          article.description[2] = article.description[2].substring(0, 350) + '...';
+        } else {
+          article.description[2] = article.description[2].substring(0, 150) + '...';
+        }
       }
     });
     return articles;

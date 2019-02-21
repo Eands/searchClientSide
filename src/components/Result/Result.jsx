@@ -28,7 +28,7 @@ class Result extends React.Component {
     super(props);
 
     this.state = ({
-      pageRangeDisplayed: 3,
+      pageRangeDisplayed: 8,
       marginPagesDisplayed: 3,
       trimResult: [],
       forcePage: null,
