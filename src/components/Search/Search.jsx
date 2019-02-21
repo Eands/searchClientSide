@@ -22,12 +22,12 @@ class Search extends React.Component {
     return (
       <div>
         <form onSubmit={onSubmit}>
-          {children}
           <input
             type='text'
             value={value}
             onChange={onChange}
             ref={this.searchInput}
+            placeholder={children}
           />
           <button type='submit'>
             {children}

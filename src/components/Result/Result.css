@@ -35,6 +35,16 @@
 .pagination .next {
     background-color: chocolate;
 }
+
 .pagination .next.disabled {
     cursor: default;
+}
+
+.result-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-list li {
+    list-style: none;
 }

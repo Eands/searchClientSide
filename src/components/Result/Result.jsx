@@ -15,7 +15,7 @@ const ResultItem = ({value}) => {
 
 const ResultList = ({items}) => {
   return (
-    <ul>
+    <ul className={'result-list'}>
       {items.map((value, index) =>
         <ResultItem key={index} value={value}/>
       )}
@@ -31,9 +31,10 @@ class Result extends React.Component {
       pageRangeDisplayed: 3,
       marginPagesDisplayed: 3,
       trimResult: [],
+      forcePage: null,
     });
 
-    this.handlePageClick = this.handlePageClick.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
     this.getItems = this.getItems.bind(this);
   }
 
@@ -46,7 +47,7 @@ class Result extends React.Component {
     return this.props.results.slice(offset, this.state.pageRangeDisplayed + offset);
   }
 
-  handlePageClick(data) {
+  handlePageChange(data) {
     this.setState({
       trimResult: this.getItems(data.selected),
     })
@@ -58,11 +59,22 @@ class Result extends React.Component {
     })
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.results !== this.props.results) {
+      console.log('true');
+      this.setState({
+        trimResult: this.getItems(0),
+        forcePage: 0
+      })
+    }
+  }
+
   render() {
     const {
       pageRangeDisplayed,
       marginPagesDisplayed,
-      trimResult
+      trimResult,
+      forcePage
     } = this.state;
     const pageCount = this.getPageCount();
 
@@ -73,11 +85,13 @@ class Result extends React.Component {
           pageCount={pageCount}
           pageRangeDisplayed={pageRangeDisplayed}
           marginPagesDisplayed={marginPagesDisplayed}
-          onPageChange={this.handlePageClick}
+          onPageChange={this.handlePageChange}
           containerClassName={'pagination'}
           activeClassName={'active'}
           subContainerClassName={'pages pagination'}
           breakClassName={'break-me'}
+          forcePage={forcePage}
+          initialPage={1}
         />
       </div>
     )
