@@ -61,7 +61,6 @@ class Result extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.results !== this.props.results) {
-      console.log('true');
       this.setState({
         trimResult: this.getItems(0),
         forcePage: 0
@@ -91,7 +90,6 @@ class Result extends React.Component {
           subContainerClassName={'pages pagination'}
           breakClassName={'break-me'}
           forcePage={forcePage}
-          initialPage={1}
         />
       </div>
     )
