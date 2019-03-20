@@ -1,5 +1,6 @@
 .pagination {
     color: black !important;
+    display: inline-block;
 }
 
 .pagination li {
