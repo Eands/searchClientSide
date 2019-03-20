@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="theme-color" content="#000000" />
-    <!--
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <script type="text/javascript" src="../mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="theme-color" content="#000000" />
+  <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -22,12 +20,38 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
+  <title>React App</title>
+</head>
+
+<body>
+  <!-- start header -->
+  <div id="wrapper">
+  <div id="header">
+    <div id="logo">
+      <h1><a href="#">МСиМ</a></h1>
+      <p><a href="http://fkn.univer.omsk.su/">научный журнал ФКН ОмГУ</a></p>
+    </div>
+    <div id="issn">
+      <a href="http://www.issn.org">ISSN 2222-8799 (online)</a><br />
+      <a href="http://www.issn.org">ISSN 2222-8772 &nbsp;&nbsp;(print)</a>
+    </div>
+  </div>
+  <!-- end header -->
+  <!-- star menu -->
+  <div id="menu">
+    <ul>
+      <li><a href="index.php">О журнале</a></li>
+      <li><a href="numbers.html">Выпуски</a></li>
+      <li><a href="authors.html">Авторам</a></li>
+      <li><a href="redactor.html">Редколлегия</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+      <li class="current_page_item"><a href="search.html">Поиск</a></li>
+    </ul>
+  </div>
+  <!-- end menu -->
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -37,5 +61,16 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+  <!-- start footer -->
+  <div id="footer">
+    <p class="legal">
+      &copy;&nbsp;
+      <script>
+        document.write(new Date().getFullYear());
+      </script>
+      <a href="#">МСиМ</a>
+  </div>
+  <!-- end footer -->
+</body>
+
 </html>

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import './Result.css';
 
-const ResultItem = ({value}) => {
+const ResultItem = ({ value }) => {
   return (
     <li key={value.index}>
       <h4>
@@ -13,11 +13,11 @@ const ResultItem = ({value}) => {
   );
 };
 
-const ResultList = ({items}) => {
+const ResultList = ({ items }) => {
   return (
     <ul className={'result-list'}>
       {items.map((value, index) =>
-        <ResultItem key={index} value={value}/>
+        <ResultItem key={index} value={value} />
       )}
     </ul>
   )
@@ -78,19 +78,23 @@ class Result extends React.Component {
     const pageCount = this.getPageCount();
 
     return (
-      <div>
-        <ResultList items={trimResult}/>
-        <ReactPaginate
-          pageCount={pageCount}
-          pageRangeDisplayed={pageRangeDisplayed}
-          marginPagesDisplayed={marginPagesDisplayed}
-          onPageChange={this.handlePageChange}
-          containerClassName={'pagination'}
-          activeClassName={'active'}
-          subContainerClassName={'pages pagination'}
-          breakClassName={'break-me'}
-          forcePage={forcePage}
-        />
+      <div id="page">
+        <div className="post">
+          <ResultList items={trimResult} />
+          <div id="menu">
+            <ReactPaginate
+              pageCount={pageCount}
+              pageRangeDisplayed={pageRangeDisplayed}
+              marginPagesDisplayed={marginPagesDisplayed}
+              onPageChange={this.handlePageChange}
+              containerClassName={'pagination'}
+              activeClassName={'active'}
+              subContainerClassName={'pages pagination'}
+              breakClassName={'break-me'}
+              forcePage={forcePage}
+            />
+          </div>
+        </div>
       </div>
     )
   }

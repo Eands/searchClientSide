@@ -6,6 +6,7 @@ import Fuse from 'fuse.js';
 import porterRu from './libs/stemmerRu';
 import porterEu from './libs/stemmerEn';
 import './App.css';
+import './style/default.css';
 
 class App extends Component {
   constructor(props) {
