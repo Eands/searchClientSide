@@ -131,9 +131,6 @@ class App extends Component {
 
     trimArticles(articles) {
         articles.map(article => {
-            if (typeof article.description === 'string') {
-                article.description = article.description.substring(0, 300) + '...';
-            }
             if (article.description[0] !== undefined && article.description[0].length >= 150) {
                 article.description[0] = '...' + article.description[0].slice(-150);
             }
