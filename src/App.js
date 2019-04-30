@@ -41,7 +41,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        fetch('/search/data/data.json')
+        fetch('/data/data.json')
             .then(response => response.json())
             .then(data => this.setState({
                 articles: data
@@ -124,13 +124,16 @@ class App extends Component {
             });
         } else {
             this.setState({
-                results: this.trimArticles(this.highlight(result, 'className')),
+                results: this.trimArticles(this.highlight(result, 'highlight-result')),
             })
         }
     }
 
     trimArticles(articles) {
         articles.map(article => {
+            while (article.description.length !== 3) {
+                article.description.pop();
+            }
             if (article.description[0] !== undefined && article.description[0].length >= 150) {
                 article.description[0] = '...' + article.description[0].slice(-150);
             }
