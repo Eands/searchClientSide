@@ -62,11 +62,17 @@ foreach ($folders as $files) {
             if (!is_null($parseTest)) {
                 $titleNode = $parseTest->findNodeByAttributeDown('class', 'title');
                 $descriptionNode = $parseTest->findNodeByAttributeDown('class', 'entry');
+
                 if(!is_null($titleNode) && !is_null($descriptionNode)) {
+                    //debug
+                    echo '<h4>' . trim_all(convertToUtf8FromCp1251(removeHtmlComments($titleNode->getText()))) . '</h4><br>';
+                    echo trim_all(convertToUtf8FromCp1251(removeHtmlComments($descriptionNode->getText()))) . '<br>';
+                    //
                     $tmp['title'] = trim_all(convertToUtf8FromCp1251(removeHtmlComments($titleNode->getText())));
                     $tmp['description'] = trim_all(convertToUtf8FromCp1251(removeHtmlComments($descriptionNode->getText())));
-                    $tmp['url'] = $_SERVER['SERVER_NAME'] . '/' . $file;
                 }
+                $tmp['url'] = $_SERVER['SERVER_NAME'] . '/' . $file;
+                echo $file . '<br>';
             }
 
             /*$controls = $htmlParser->getElementsByTagName('div');
@@ -80,7 +86,6 @@ foreach ($folders as $files) {
                     }
                 }
             }*/
-            echo $file . '<br>';
             array_push($articles, $tmp);
             //enable extension=php_mbstring.dll
         }
